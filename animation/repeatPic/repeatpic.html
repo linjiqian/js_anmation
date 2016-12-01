@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>无限循环轮播图</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 400px;
+            height: 200px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 400px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen li {
+            width: 400px;
+            height: 200px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 2000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+
+        #arr {
+            display: none;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+    </style>
+
+    <script src="../animation.js"></script>
+    <script type="text/javascript">
+
+        window.onload = function() {
+            //init
+            var imgWidth = 400;
+            var box = document.getElementById("box");
+            var left = document.getElementById("left");
+            var right = document.getElementById("right");
+
+            var bcs = box.children;
+            var screens = bcs[0].children;
+            var center = bcs[1];
+            var ul = screens[0];
+            var ol = screens[1];
+
+            box.onmouseover = function(){
+                center.style.display = "block";
+                clearInterval(auto_timer);
+            };
+
+            box.onmouseout = function(){
+                center.style.display = "none";
+                startForPic();
+            };
+
+            var ul_lis = ul.children;
+
+            for(var i = 0;i<ul_lis.length - 1;i++){
+                var li = document.createElement("li");
+                li.innerHTML = i+1;
+                ol.appendChild(li);
+            }
+
+            var pre = 0;
+            var ol_lis = ol.children;
+            ol_lis[0].className = "current";
+            for(var i=0;i<ol_lis.length;i++){
+                ol_lis[i].index = i;
+                ol_lis[i].onmouseover = function(){
+                    for(var i=0;i<ol_lis.length;i++){
+                        ol_lis[i].className = "";
+                    }
+                    this.className = "current";
+                    pre = this.index;
+                    startAnimation(ul,{"left":-this.index * imgWidth});
+                };
+            }
+
+            left.onclick = function(){
+                if(pre === ol_lis.length){
+                    pre = 0;
+                    ul.style.left = "0px"; //定位至第一张图
+                }
+                pre++;
+                startAnimation(ul,{"left":-pre * imgWidth});
+                for(var i=0;i<ol_lis.length;i++){
+                    ol_lis[i].className = "";
+                }
+                ol_lis[pre === ol_lis.length ? 0 : pre].className = "current";
+            };
+
+            right.onclick = function(){
+                if(pre === 0){
+                    pre = ol_lis.length;
+                    ul.style.left = -pre * imgWidth +"px"; //定位至最后一张图
+                }
+                pre--;
+                startAnimation(ul,{"left":-pre*imgWidth});
+                for(var i=0;i<ol_lis.length;i++){
+                    ol_lis[i].className = "";
+                }
+                ol_lis[pre].className = "current";
+            };
+
+            /* 自动轮播 */
+            function startForPic(){
+                auto_timer = setInterval(function(){
+                    left.onclick();
+                },1000);
+            };
+            startForPic();
+        }
+
+    </script>
+
+</head>
+<body>
+<div class="all" id='box'>
+    <div class="screen">
+        <ul>
+            <li><img src="img/pic1.png" width="400" height="200"/></li>
+            <li><img src="img/pic2.png" width="400" height="200"/></li>
+            <li><img src="img/pic3.png" width="400" height="200"/></li>
+            <li><img src="img/pic4.png" width="400" height="200"/></li>
+            <li><img src="img/pic1.png" width="400" height="200"/></li>
+        </ul>
+        <ol>
+        </ol>
+    </div>
+    <div id="arr"><span id="left">&lt;</span><span id="right">&gt;</span></div>
+</div>
+</body>
+</html>

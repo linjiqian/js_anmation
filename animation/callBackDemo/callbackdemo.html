@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .box {
+            width: 322px;
+            position: fixed;
+            bottom: 0;  /* 定位在bottom就会在减少高度时图片渐渐下行 */
+            right: 0; /* 定位right，在减少width会向右缩小 */
+            overflow: hidden;
+        }
+
+        span {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+        }
+    </style>
+
+    <script src="../animation.js"></script>
+    <script type="text/javascript">
+
+        onload = function() {
+            var box = document.getElementById("box");
+            var closeButton = document.getElementById("closeButton");
+            var bottomPart = document.getElementById("bottomPart");
+            closeButton.onclick = function(){
+                startAnimation(bottomPart,{"height":0},function(){ //传入供回调的匿名函数
+                    startAnimation(box,{"width":0});
+                });
+            };
+        };
+    </script>
+
+</head>
+<body>
+<div class="box" id="box">
+    <span id="closeButton"></span>
+    <div class="hd" id="headPart">
+        <img src="img/t.jpg" alt=""/>
+    </div>
+    <div class="bd" id="bottomPart">
+        <img src="img/b.jpg" alt=""/>
+    </div>
+</div>
+</body>
+</html>

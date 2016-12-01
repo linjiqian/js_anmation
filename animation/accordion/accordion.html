@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>accordion</title>
+    <style>
+        ul {
+            list-style: none
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            width: 1150px;
+            height: 400px;
+            margin: 50px auto;
+            border: 1px solid red;
+            overflow: hidden;
+        }
+
+        div li {
+            width: 240px;
+            height: 400px;
+            float: left;
+        }
+/*div宽度小于图片总宽度是为了避免在手风琴拉开时右侧由于各个图片在减少宽度出现多余宽度白底*/
+        div ul {
+            width: 1300px;
+        }
+    </style>
+
+    <script src="../animation.js"></script>
+    <script type="text/javascript">
+
+        onload = function () {
+            var box = document.getElementById("box");
+            var ul = box.children[0];
+            var lis = ul.children;
+            for(var i=0;i<lis.length;i++){
+                lis[i].style.backgroundImage = "url(img/"+ (i+1)+".jpg)";
+                lis[i].onmouseover = function(){
+                    for(var i=0;i<lis.length;i++){
+                        if(lis[i] != this)
+                            startAnimation(lis[i],{"width":100},10);
+                        else
+                            startAnimation(this,{"width":800},10);
+                    }
+                };
+
+                lis[i].onmouseout = function(){
+                    for(var i=0;i<lis.length;i++){
+                        startAnimation(lis[i],{"width":240},10);
+                    }
+                };
+            }
+        };
+
+    </script>
+</head>
+<body>
+<div id="box">
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+</body>
+</html>
